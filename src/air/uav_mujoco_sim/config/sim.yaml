@@ -1,0 +1,46 @@
+# uav_mujoco_sim 桥接节点参数
+# 话题名与量纲与 carlair_ros_bridge 保持一致，上游算法模块（uav_ppo_nav /
+# air_learning / octree_uav_3d_pathfinding 等）可直接切换。
+
+sim:
+  host: "127.0.0.1"       # 仿真服务端地址。仿真在 Windows 宿主机、ROS 在 VMware/VirtualBox
+                          # 虚拟机时，填宿主机虚拟网段地址（VMware NAT 常见 192.168.94.1，
+                          # VirtualBox NAT 固定为 10.0.2.2）。
+  port: 41460             # 41451 为 AirSim 默认端口，改用 41460 避开冲突
+  connect_timeout: 30.0   # 等待仿真端就绪的秒数（launch 同时拉起两端，顺序不定）
+
+rate:
+  control_hz: 50.0        # 控制回路：推进仿真 + 发布里程计（小报文）
+  image_hz: 10.0          # 感知回路：图像/点云（大报文，与控制回路解耦）
+  lidar_hz: 10.0          # 点云发布频率
+  report_every: 10.0      # 打印实测速率的间隔（秒）。跨虚拟机时图像回路常是瓶颈，
+                          # 配置值不等于实际可达速率。
+
+sensor:
+  publish_rgb: true
+  publish_depth: true
+  publish_seg: false      # 语义分割默认关闭（项目 3 语义建图时打开）
+  publish_lidar: true
+
+control:
+  max_horiz_speed: 5.0    # 水平限速 m/s
+  max_vert_speed: 3.0     # 垂直限速 m/s
+  max_yaw_rate: 1.0       # 偏航角速度限幅 rad/s
+  body_frame: true        # /uav/cmd_vel 是否按机体系解释；输出世界系速度的上游策略
+                          #（如 uav_ppo_nav）需设为 false。
+  cmd_timeout: 0.5        # 超时未收到新指令则悬停（秒，安全保护）
+  auto_takeoff: true      # 启动后自动起飞并悬停
+
+frame:
+  world: "world"          # 世界坐标系（ENU：x 东、y 北、z 上）
+  body: "base_link"
+
+topic:
+  odom: "/uav/odom"
+  cmd_vel: "/uav/cmd_vel"
+  goal: "/uav/goal"
+  image: "/camera/image_raw"
+  depth: "/camera/depth"
+  seg: "/camera/seg"
+  lidar: "/lidar/points"
+  status: "/uav/status"
