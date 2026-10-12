@@ -1,91 +1,168 @@
-import carla
+"""Carla 交通标志识别（Windows 端脚本版）
+
+从 Carla RGB 相机获取图像，使用 YOLOv8 神经网络识别交通标志（stop sign），
+并通过键盘控制车辆。与 ROS 版 carla_tsr_ros 互补。
+
+运行前置条件：
+1. Carla/OpenHUTB 服务端已启动并完成地图加载（默认 127.0.0.1:2000）
+2. 已安装 Carla Python API（hutb whl）
+3. yolov8n.pt 权重放在模块目录下
+
+键盘操作需先点击 OpenCV 窗口激活焦点，否则按键无效。
+"""
+import os
+import sys
+import time
 import random
+import argparse
+
 import cv2
 import numpy as np
-import time
-from ultralytics import YOLO
 
-# 加载 YOLOv8n 预训练模型 (类别 11 为 stop sign)
-model = YOLO("yolov8n.pt") 
+# ============================================================================
+# 参数配置（集中管理，便于扩展）
+# ============================================================================
+CONFIG = {
+    # Carla 连接
+    'host': '127.0.0.1',
+    'port': 2000,
+    'timeout': 10.0,
+    # 相机
+    'camera_width': 640,
+    'camera_height': 360,
+    'camera_fov': 90,
+    # 神经网络
+    'model_filename': 'yolov8n.pt',
+    'target_class': 11,           # COCO: stop sign
+    'infer_every_n_frames': 4,    # 每 N 帧推理一次，降频
+    # 控制
+    'throttle_step': 0.06,
+    'steer_step': 0.10,
+    'key_hold_timeout': 0.18,
+    # 主循环帧率控制
+    'loop_sleep': 0.02,
+}
 
-# 声明一个全局变量，用于在主线程中显示图像
+
+# ============================================================================
+# 权重路径解析：优先模块目录，其次当前目录
+# ============================================================================
+def resolve_model_path(filename):
+    module_dir = os.path.dirname(os.path.abspath(__file__))
+    candidates = [
+        os.path.join(module_dir, filename),
+        os.path.join(os.getcwd(), filename),
+    ]
+    for path in candidates:
+        if os.path.exists(path):
+            return path
+    print("[ERROR] 未找到权重文件 " + filename)
+    print("[ERROR] 请下载 yolov8n.pt 并放到以下任一位置：")
+    for path in candidates:
+        print("  - " + path)
+    print("  下载地址：https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n.pt")
+    sys.exit(1)
+
+
+# ============================================================================
+# 全局状态
+# ============================================================================
 current_frame = None
 latest_annotated_frame = None
 frame_count = 0
-INFER_EVERY_N_FRAMES = 4
+model = None
+
 
 def camera_callback(image):
-    """
-    传感器毁调：只负责处理图像和进行模型推理
-    """
+    """相机回调：图像解码 + 降频推理"""
     global current_frame, latest_annotated_frame, frame_count
+
     array = np.frombuffer(image.raw_data, dtype=np.dtype("uint8"))
     array = np.reshape(array, (image.height, image.width, 4))
-    frame = array[:, :, :3]  
+    frame = array[:, :, :3]
 
     frame_count += 1
-    if frame_count % INFER_EVERY_N_FRAMES == 0:
-        # YOLO 降频推理，避免每帧都推理导致主循环卡顿
-        results = model(frame, classes=[11], verbose=False)
+    if frame_count % CONFIG['infer_every_n_frames'] == 0:
+        results = model(frame, classes=[CONFIG['target_class']], verbose=False)
         latest_annotated_frame = results[0].plot()
 
-    # 无论当前帧是否推理，都更新显示画面
-    if latest_annotated_frame is not None:
-        current_frame = latest_annotated_frame
-    else:
-        current_frame = frame
+    current_frame = latest_annotated_frame if latest_annotated_frame is not None else frame
+
 
 def main():
-    # 1. 连接 Carla 模拟器
-    client = carla.Client('127.0.0.1', 2000)
-    client.set_timeout(10.0)
-    world = client.get_world()
+    global model
+
+    parser = argparse.ArgumentParser(description='Carla Traffic Sign Recognition')
+    parser.add_argument('--host', default=CONFIG['host'], help='Carla 服务端地址')
+    parser.add_argument('--port', type=int, default=CONFIG['port'], help='Carla 服务端端口')
+    args = parser.parse_args()
+
+    # 1. 加载权重
+    model_path = resolve_model_path(CONFIG['model_filename'])
+    print("[INFO] 加载 YOLO 权重: " + model_path)
+    from ultralytics import YOLO
+    model = YOLO(model_path)
+
+    # 2. 连接 Carla
+    import carla
+    print("[INFO] 连接 Carla: " + args.host + ":" + str(args.port))
+    try:
+        client = carla.Client(args.host, args.port)
+        client.set_timeout(CONFIG['timeout'])
+        world = client.get_world()
+    except Exception as e:
+        print("[ERROR] 连接 Carla 失败: " + str(e))
+        print("[ERROR] 请检查：")
+        print("  1. Carla/OpenHUTB 服务端是否已启动")
+        print("  2. 地图是否加载完成")
+        print("  3. host/port 参数是否正确（默认 127.0.0.1:2000）")
+        sys.exit(1)
+
     blueprint_library = world.get_blueprint_library()
 
-    # 2. 生成车辆 (Ego Vehicle)
+    # 3. 生成车辆
     vehicle_bp = blueprint_library.filter('vehicle.tesla.model3')[0]
     spawn_point = random.choice(world.get_map().get_spawn_points())
-    vehicle = world.spawn_actor(vehicle_bp, spawn_point)
-    print("✅ 车辆已生成！(已关闭自动驾驶)")
+    try:
+        vehicle = world.spawn_actor(vehicle_bp, spawn_point)
+    except Exception as e:
+        print("[ERROR] 生成车辆失败: " + str(e))
+        sys.exit(1)
+    print("[INFO] 车辆已生成")
 
-    # 3. 生成并安装 RGB 摄像头
+    # 4. 挂载相机
     camera_bp = blueprint_library.find('sensor.camera.rgb')
-    camera_bp.set_attribute('image_size_x', '640')
-    camera_bp.set_attribute('image_size_y', '360')
-    camera_bp.set_attribute('fov', '90')
+    camera_bp.set_attribute('image_size_x', str(CONFIG['camera_width']))
+    camera_bp.set_attribute('image_size_y', str(CONFIG['camera_height']))
+    camera_bp.set_attribute('fov', str(CONFIG['camera_fov']))
     camera_transform = carla.Transform(carla.Location(x=1.5, z=2.4))
     camera = world.spawn_actor(camera_bp, camera_transform, attach_to=vehicle)
-
-    # 4. 开启摄像头监听
     camera.listen(lambda image: camera_callback(image))
-    
-    # 5. 初始化车辆控制对象
+
+    # 5. 控制状态
     control = carla.VehicleControl()
-    control.throttle = 0.0
-    control.steer = 0.0
-    control.brake = 0.0
     last_input_time = 0.0
-    key_hold_timeout = 0.18
     target_throttle = 0.0
     target_steer = 0.0
     target_reverse = False
 
-    print("\n=========================================")
-    print("🚗 准备就绪！请点击 OpenCV 窗口激活键盘焦点。")
-    print("键盘操作说明 (需在 OpenCV 窗口内按键)：")
+    print()
+    print("=========================================")
+    print("准备就绪！请点击 OpenCV 窗口激活键盘焦点。")
+    print("键盘操作说明（必须点击 OpenCV 窗口后再按键）：")
     print("  [W] : 油门前进")
     print("  [S] : 刹车 / 倒车")
     print("  [A] : 左转")
     print("  [D] : 右转")
     print("  [Q] : 退出程序")
-    print("=========================================\n")
+    print("=========================================")
+    print()
 
+    # 6. 主循环
     try:
         while True:
-            # 等待世界更新
             world.wait_for_tick()
 
-            # 如果有画面，则在主线程中显示
             if current_frame is not None:
                 cv2.imshow("Carla Traffic Sign Recognition", current_frame)
 
@@ -110,35 +187,42 @@ def main():
             elif key == ord('d'):
                 target_steer = 0.45
                 last_input_time = now
-            elif now - last_input_time > key_hold_timeout:
+            elif now - last_input_time > CONFIG['key_hold_timeout']:
                 target_throttle = 0.0
                 target_steer = 0.0
 
-            # 在接近静止时再切换前进/倒车，避免频繁换挡导致顿挫
             current_speed = vehicle.get_velocity().length()
             if current_speed < 0.2:
                 control.reverse = target_reverse
 
-            # 平滑逼近目标控制，减少“一卡一卡”的体感
-            throttle_step = 0.06
-            steer_step = 0.10
-            control.throttle += np.clip(target_throttle - control.throttle, -throttle_step, throttle_step)
-            control.steer += np.clip(target_steer - control.steer, -steer_step, steer_step)
+            control.throttle += np.clip(target_throttle - control.throttle,
+                                        -CONFIG['throttle_step'], CONFIG['throttle_step'])
+            control.steer += np.clip(target_steer - control.steer,
+                                     -CONFIG['steer_step'], CONFIG['steer_step'])
             control.brake = 0.0
 
-            # 7. 将控制指令发送给车辆
             vehicle.apply_control(control)
 
+            # 帧率控制，避免满载 CPU
+            time.sleep(CONFIG['loop_sleep'])
+
     except KeyboardInterrupt:
-        print("\n手动中断运行...")
+        print()
+        print("[INFO] 手动中断")
     finally:
-        # 清理战场，防止 Carla 里塞满垃圾车辆
-        print("正在清理车辆和传感器...")
-        camera.stop()
-        camera.destroy()
-        vehicle.destroy()
+        print("[INFO] 清理资源...")
+        try:
+            camera.stop()
+            camera.destroy()
+        except Exception:
+            pass
+        try:
+            vehicle.destroy()
+        except Exception:
+            pass
         cv2.destroyAllWindows()
-        print("清理完成，程序退出。")
+        print("[INFO] 清理完成，程序退出")
+
 
 if __name__ == '__main__':
     main()
