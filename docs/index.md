@@ -29,6 +29,8 @@ ROS每章节运行代码:
 
 [第二章](<./Run_code_for_%20the_%20chapter/ROS理论与实践第二章代码运行.md>)
 
+ROS 2 话题发布订阅基础实验（talker/listener）：[chap2/ros2_pubsub_py](./chap2/ros2_pubsub_py.md)
+
 
 ## 2. 地面载具  <span id='ground_vehicle'></span>
 
