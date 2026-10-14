@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""uav_mujoco_sim 统一启动入口：仿真服务端 + 桥接节点 + 键盘遥控节点（可选）。
+"""uav_mujoco_sim 统一启动入口：仿真服务端 + 桥接节点 + 键盘遥控节点（可选，默认关）。
 
-    ros2 launch uav_mujoco_sim main.launch.py [scene:=… keyboard:=false quality:=full]
+    ros2 launch uav_mujoco_sim main.launch.py [scene:=… quality:=full]
 
 仿真与 ROS2 分属两个进程：rclpy 只有 Python 3.8 绑定，MuJoCo 3.12 需 Python ≥3.10。
+键盘遥控要独占一个前台终端，另开一个终端跑 `ros2 run uav_mujoco_sim keyboard`。
 """
 import os
 import shutil
@@ -120,8 +121,6 @@ def _launch_setup(context, *args, **kwargs):
     keyboard = Node(
         package="uav_mujoco_sim", executable="keyboard",
         name="uav_keyboard_teleop", output="screen",
-        prefix="xterm -e" if lip("keyboard_in_xterm").perform(context).lower()
-        == "true" else None,
         condition=IfCondition(lip("keyboard")))
 
     # 桥接自带 30 s 重试，这里只做 2 s 错峰
@@ -150,10 +149,10 @@ def generate_launch_description():
         DeclareLaunchArgument("headless", default_value="false",
                               description="true 则不渲染视觉传感器"),
         DeclareLaunchArgument("imu_noise", default_value="false"),
-        DeclareLaunchArgument("keyboard", default_value="true",
-                              description="是否同时启动任务①的键盘遥控节点"),
-        DeclareLaunchArgument("keyboard_in_xterm", default_value="false",
-                              description="true 则弹独立 xterm 窗口读按键"
-                                          "（ros2 launch 会接管 stdin）"),
+        # 键盘节点默认不开：launch 拉起的子进程不在终端的前台进程组，读终端收不到
+        # 按键也不报错。遥控要另开一个终端跑 `ros2 run uav_mujoco_sim keyboard`。
+        DeclareLaunchArgument("keyboard", default_value="false",
+                              description="是否同时启动任务①的键盘遥控节点"
+                                          "（默认关，见 README 5.3）"),
     ]
     return LaunchDescription(args + [OpaqueFunction(function=_launch_setup)])

@@ -52,8 +52,9 @@ def run_demo(scene: str = "open_ground", seed: int = 0, dt: float = 0.01,
     cfg = TeleopConfig()
     keys_reader = RawKeyReader(warn=print)
     if not keys_reader.is_tty:
-        print("⚠️  当前 stdin 不是终端，收不到键盘。")
-        print("    请直接在终端里运行，不要用管道或重定向。")
+        print("取不到可读的终端（%s），收不到键盘。请在终端里直接运行，"
+              % (keys_reader.error or "未知"))
+        print("不要用管道、重定向、nohup 或放在后台启动。")
 
     pressed = set()
     last_key_t = -1e9

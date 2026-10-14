@@ -206,13 +206,14 @@ export DISPLAY=:0 MUJOCO_GL=glfw
 ros2 launch uav_mujoco_sim main.launch.py scene:=obstacle_field
 ```
 
-launch 会自动：探测仿真侧 Python → 启动 MuJoCo 服务端 → 启动桥接 → 启动键盘遥控节点。
+launch 会自动：探测仿真侧 Python → 启动 MuJoCo 服务端 → 启动桥接节点。
+键盘遥控节点默认不启动（见 5.3）。
 
 常用参数：
 
 ```bash
 ros2 launch uav_mujoco_sim main.launch.py scene:=urban_block
-ros2 launch uav_mujoco_sim main.launch.py scene:=gate_track keyboard:=false
+ros2 launch uav_mujoco_sim main.launch.py keyboard:=true    # 键盘遥控，见 5.3
 ros2 launch uav_mujoco_sim main.launch.py quality:=full    # 开阴影，录演示动图用
 ros2 launch uav_mujoco_sim main.launch.py headless:=true   # 不渲染，纯控制/规划
 ```
@@ -224,18 +225,19 @@ ros2 launch uav_mujoco_sim main.launch.py headless:=true   # 不渲染，纯控�
 *（动图：在障碍场中依次按住 `W` 前进、`A` 左移、`R` 上升、`Q` 右转、`F` 下降，
 松开所有键后无人机自动悬停。右下角小窗是同一时刻的第一视角 `/camera/image_raw`。）*
 
-`ros2 launch` 会接管 stdin，键盘读不到按键。**推荐在真实终端里直接运行**：
+键盘节点从控制终端 `/dev/tty` 读键，不读 stdin（`ros2 launch` 把子进程的 stdin
+接成了管道）。终端只把输入交给**前台**进程组，而 launch 拉起的子进程不在其中，
+读终端拿到 `EIO`——节点在跑、日志正常、按键没反应。所以键盘节点**默认不随 launch
+启动**，遥控时另开一个终端：
 
 ```bash
-# 终端 1：仿真（方式 B 时）
-~/uav_ws/.venv/bin/python main.py --server --scene obstacle_field
-
-# 终端 2：桥接
-ros2 run uav_mujoco_sim bridge
-
-# 终端 3：键盘（必须在真实终端里，不能用管道重定向）
+source /opt/ros/humble/setup.bash
+source ~/uav_ws/ros2_ws/install/setup.bash
 ros2 run uav_mujoco_sim keyboard
 ```
+
+该终端要让程序留在前台——别用管道、重定向、`nohup`、`&` 启动。若顺手写了
+`keyboard:=true`，节点会打印一条"取不到可读的终端（not foreground...）"。
 
 按键映射（与上游 `uav_keyboard_control` 一致）：
 
@@ -740,9 +742,15 @@ m.data = _as_byte_array(a.tobytes())     # ✓ 0.08 ms
 
 ### 12.2 键盘节点收不到按键
 
-`ros2 launch` 与管道都会接管 stdin，导致键盘读不到。节点在这种情况下会**明确打印告警**
-而不是静默失败。解决办法是在真实终端里用 `ros2 run uav_mujoco_sim keyboard`，
-或改用不依赖 ROS 的 `main.py --demo`。
+键盘节点读 `/dev/tty`，要独占一个前台终端。按顺序查：
+
+1. 是 `ros2 launch ... keyboard:=true` 起的吗？launch 的子进程不在终端前台进程组，
+   终端不把输入交给它。另开一个终端跑 `ros2 run uav_mujoco_sim keyboard`。
+2. 启动日志里的 `取键自` 是什么？`none` 表示没拿到可读终端，同一行的括号里是原因
+   （`not foreground`＝进程组不对；`no tty`＝`/dev/tty` 与 stdin 都不是终端，
+   如 `nohup`、systemd、容器里没有 `tty`）。
+3. 桥接起了吗？`ros2 topic echo /uav/cmd_vel` 看有没有速度指令——按键有反应
+   但无人机不动，问题在桥接或仿真端，不在键盘。
 
 ### 12.3 虚拟机里渲染报 GL 错误
 

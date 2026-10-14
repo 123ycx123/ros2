@@ -120,33 +120,32 @@ export DISPLAY=:0            # 无显示环境见 5.5
 ros2 launch uav_mujoco_sim main.launch.py
 ```
 
-launch 会自动：探测仿真侧 Python → 启动 MuJoCo 服务端 → 启动桥接节点 → 启动键盘遥控。
+launch 会自动：探测仿真侧 Python → 启动 MuJoCo 服务端 → 启动桥接节点。
+键盘遥控节点默认不启动（见 5.3）。
 
 常用参数：
 
 ```bash
 ros2 launch uav_mujoco_sim main.launch.py scene:=urban_block
-ros2 launch uav_mujoco_sim main.launch.py scene:=obstacle_field keyboard:=false
+ros2 launch uav_mujoco_sim main.launch.py keyboard:=true     # 键盘遥控，见 5.3
 ros2 launch uav_mujoco_sim main.launch.py quality:=full     # 开阴影，录动图用
 ros2 launch uav_mujoco_sim main.launch.py headless:=true    # 不渲染，纯控制/规划
 ```
 
 ### 5.3 键盘遥控（任务①）
 
-`ros2 launch` 会接管 stdin，键盘收不到按键，改用本机终端直接运行：
+键盘节点要独占一个**前台**终端，因此**默认不随 launch 启动**：终端只把输入交给前台
+进程组，launch 拉起的子进程不在其中，读终端拿到 `EIO`，按键没反应也不报错。
+
+遥控时另开一个终端（终端 1 跑 5.2 的 launch，终端 2 跑键盘节点）：
 
 ```bash
-# 终端 1：仿真服务端
-~/uav_ws/.venv/bin/python main.py --server --scene obstacle_field
-
-# 终端 2：桥接
-source ~/uav_ws/ros2_ws/install/setup.bash
-ros2 run uav_mujoco_sim bridge
-
-# 终端 3：键盘（必须在真实终端里）
+source /opt/ros/humble/setup.bash
 source ~/uav_ws/ros2_ws/install/setup.bash
 ros2 run uav_mujoco_sim keyboard
 ```
+
+该终端要让程序留在前台——别用管道、重定向、`nohup`、`&` 启动。
 
 按键：
 
