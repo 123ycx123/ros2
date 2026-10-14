@@ -22,7 +22,7 @@ source /opt/ros/humble/setup.bash
 python3 src/humanoid_zmp_walk_planner/humanoid_zmp_walk_planner.py
 ```
 ## 五、运行效果（截图）
-![运行效果](img/capture_3.png)
+https://github.com/123ycx123/ros2/blob/123ycx123-patch-1/docs/img/capture_3.png
 
 效果说明：节点成功启动，实时计算并绘制出人形机器人的足部运动轨迹，图形界面成功展示了机器人的行走姿态，验证了 ZMP 步行规划算法的正确性。
 
