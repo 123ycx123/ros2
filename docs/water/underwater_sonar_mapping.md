@@ -18,7 +18,7 @@ source /opt/ros/humble/setup.bash
 python3 src/underwater_sonar_mapping/underwater_sonar_mapping.py
 ```
 ## 五、运行效果（截图）
-![运行效果](img/capture_4.png)
+https://github.com/123ycx123/ros2/blob/123ycx123-patch-2/docs/img/capture_4.png
 
 效果说明：节点成功启动，基于模拟声呐数据生成了三维海底地形，并清晰标注了水下沉船/暗礁等障碍物位置，验证了声呐三维测绘与避障感知算法的可行性。
 
