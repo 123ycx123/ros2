@@ -320,6 +320,8 @@ class GeometricController:
         self.kr = np.asarray(kr, dtype=float)
         self.kw = np.asarray(kw, dtype=float)
         self.max_tilt = np.deg2rad(35.0)   # 倾角上限
+        #: 期望推力上限占 4·T_max 的比例
+        self.thrust_alloc = 0.7
 
     def compute(self, st: QuadrotorState,
                 p_d: np.ndarray, v_d: np.ndarray, a_d: np.ndarray,
@@ -331,6 +333,12 @@ class GeometricController:
         # 1) 期望推力矢量（世界系）
         acc = a_d + self.kp * e_p + self.kd * e_v
         f = self.p.mass * (acc + np.array([0.0, 0.0, 9.81]))
+        # 限总推力：无上限时竞速场景实测 |f| 峰值 2269 N（上限 24 N），混控力矩
+        # 预算 min(4T_max−T, T) 归零、姿态翻转。
+        f_max = self.thrust_alloc * 4.0 * self.p.max_thrust
+        nf = float(np.linalg.norm(f))
+        if nf > f_max:
+            f *= f_max / nf
         # 限倾角：水平分量不超过 tan(max_tilt) × 垂直分量
         fz = max(f[2], 0.15 * self.p.mass * 9.81)
         fh = np.linalg.norm(f[:2])
