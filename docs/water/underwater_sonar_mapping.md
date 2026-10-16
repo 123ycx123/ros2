@@ -9,28 +9,45 @@
 * 依赖库：rclpy, matplotlib, numpy
 
 ## 核心代码文件
-* `src/underwater_sonar_mapping/underwater_sonar_mapping.py`：三维声呐测绘与障碍物可视化节点。
 
-## 运行步骤
-```bash
-cd ~/my_ws
-source /opt/ros/humble/setup.bash
-python3 src/underwater_sonar_mapping/underwater_sonar_mapping.py
+本模块包含以下核心文件，均已提交至仓库：
+
+```text
+src/
+└── underwater_sonar_mapping/
+    ├── main.py                 # 三维声呐测绘与障碍物可视化节点
+    ├── setup.py                # ROS 2 功能包配置文件
+    └── launch/
+        └── main.launch.py      # 一键启动文件
 ```
-## 五、运行效果（截图）
-https://github.com/123ycx123/ros2/blob/123ycx123-patch-2/docs/img/capture_4.png
+完整代码请点击下方链接查看：
+
+* [查看 main.py 代码](../../src/underwater_sonar_mapping/main.py)
+* [查看 setup.py 代码](../../src/underwater_sonar_mapping/setup.py)
+* [查看 main.launch.py 代码](../../src/underwater_sonar_mapping/launch/main.launch.py)
+## 运行步骤
+
+1. 新建标准工作空间并进入 src 目录：
+```bash
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+```
+2. 从 ros2 仓库拷贝模块代码到工作空间：
+```bash
+cp -r ~/OpenHUTB/ros2/src/underwater_sonar_mapping ~/ros2_ws/src/
+cd ~/ros2_ws
+```
+3. 编译工作空间并部署环境：
+```bash
+colcon build --packages-select underwater_sonar_mapping
+source install/setup.bash
+```
+4. 运行水下声呐测绘节点：
+```bash
+ros2 launch underwater_sonar_mapping main.launch.py
+```
+5.运行效果（截图）
+![运行效果](../img/capture_4.png)
 
 效果说明：节点成功启动，基于模拟声呐数据生成了三维海底地形，并清晰标注了水下沉船/暗礁等障碍物位置，验证了声呐三维测绘与避障感知算法的可行性。
 
-## 提交信息（Commit Message / PR 描述）
-text
-feat(water): 新增水下声呐三维测深与避障 ROS 2 封装模块
-
-基于 ROS 2 实现了声呐三维地形测绘与障碍物可视化。
-
-已验证：
-1. 程序运行正常
-2. 3D 海底地形与障碍物绘制成功
-3. 声呐波束模拟正确
-
----
