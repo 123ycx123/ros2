@@ -9,33 +9,57 @@
 * 依赖库：rclpy, geometry_msgs, matplotlib, numpy
 
 ## 核心代码文件清单
+
 本模块包含以下核心文件，均已提交至仓库：
-* `src/humanoid_zmp_walk_planner/humanoid_zmp_walk_planner.py`：ZMP 步行轨迹规划与可视化节点。
-* `src/humanoid_zmp_walk_planner/setup.py`：ROS 2 功能包配置文件。
-* `src/humanoid_zmp_walk_planner/launch/main.launch.py`：一键启动文件。
+
+```text
+src/
+└── humanoid_zmp_walk_planner/
+    ├── main.py                 # ZMP 步行轨迹规划与可视化节点
+    ├── setup.py                # ROS 2 功能包配置文件
+    └── launch/
+        └── main.launch.py      # 一键启动文件
+```
+完整代码请点击下方链接查看：
+
+* [查看 main.py 代码](../src/humanoid_zmp_walk_planner/main.py)
+* [查看 setup.py 代码](../src/humanoid_zmp_walk_planner/setup.py)
+* [查看 main.launch.py 代码](../src/humanoid_zmp_walk_planner/launch/main.launch.py)
 
 ## 运行步骤
-在终端中执行以下命令运行该模块：
+
+1. 新建标准工作空间并进入 src 目录：
+
 ```bash
-cd ~/my_ws
-source /opt/ros/humble/setup.bash
-python3 src/humanoid_zmp_walk_planner/humanoid_zmp_walk_planner.py
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
 ```
-## 五、运行效果（截图）
-https://github.com/123ycx123/ros2/blob/123ycx123-patch-1/docs/img/capture_3.png
 
-效果说明：节点成功启动，实时计算并绘制出人形机器人的足部运动轨迹，图形界面成功展示了机器人的行走姿态，验证了 ZMP 步行规划算法的正确性。
+2. 从 ros2 仓库拷贝模块代码到工作空间：
 
-## 提交信息（Commit Message / PR 描述）
-text
-feat(humanoid): 新增基于 ZMP 的人形机器人步行轨迹规划 ROS 2 封装模块
+```bash
+cp -r ~/OpenHUTB/ros2/src/humanoid_zmp_walk_planner ~/ros2_ws/src/
+cd ~/ros2_ws
+```
 
-基于简化双足 ZMP 模型实现了人形机器人步行轨迹规划与可视化。
+3. 编译工作空间并部署环境：
 
-已验证：
-1. 程序运行正常
-2. 人形机器人步行轨迹绘制成功
-3. 终端实时输出足部高度数据
-text
+```bash
+colcon build --packages-select humanoid_zmp_walk_planner
+source install/setup.bash
+```
+
+4. 运行 ZMP 步行轨迹规划节点：
+
+```bash
+ros2 launch humanoid_zmp_walk_planner main.launch.py
+```
+5.运行效果
+节点成功启动，实时计算并绘制出人形机器人的足部运动轨迹，图形界面成功展示了机器人的行走姿态，验证了 ZMP 步行规划算法的正确性。
+
+![运行效果](../img/capture_3.png)
+
+
+
 
 
