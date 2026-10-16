@@ -22,10 +22,9 @@ src/
 ```
 完整代码请点击下方链接查看：
 
-* [查看 main.py 代码](../src/humanoid_zmp_walk_planner/main.py)
-* [查看 setup.py 代码](../src/humanoid_zmp_walk_planner/setup.py)
-* [查看 main.launch.py 代码](../src/humanoid_zmp_walk_planner/launch/main.launch.py)
-
+* [查看 main.py 代码](../../src/humanoid_zmp_walk_planner/main.py)
+* [查看 setup.py 代码](../../src/humanoid_zmp_walk_planner/setup.py)
+* [查看 main.launch.py 代码](../../src/humanoid_zmp_walk_planner/launch/main.launch.py)
 ## 运行步骤
 
 1. 新建标准工作空间并进入 src 目录：
