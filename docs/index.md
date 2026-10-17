@@ -1,3 +1,4 @@
+
 title: 主页
 
 # [模拟器的 ROS 文档](https://github.com/OpenHUTB/ros2)
@@ -66,8 +67,9 @@ ROS每章节运行代码:
 ## 2. 人形机器人 <span id='humanoid'></span>
 
 * [人形机器人基础](./humanoid/humanoid_basics.md)
+* [人形机器人平衡控制与外力抗扰恢复](./humanoid/humanoid_push_recovery.md)
 * [MuJoCo单足弹跳机器人简单仿真](./humanoid/mujoco_hopper_demo/index.md)
-* [基于 ZMP 的步行轨迹规划](./humanoid/zmp_walk_planner.md)
+*  [基于 ZMP 的步行轨迹规划](./humanoid/zmp_walk_planner.md)
 
 ## 3. 肌肉骨骼人 <span id='musculoskeletal'></span>
 
@@ -80,6 +82,7 @@ ROS每章节运行代码:
 * [地面载具物理仿真与键盘运动控制](./ground/carla_keyboard_control.md)
 * [阿克曼控制](./ground/ackermann_control.md)
 * [传感器感知与给定轨迹跟踪（神经网络版）](./ground/carla_perception_control.md)
+* [R2D2小车自动巡航仿真](./ground/r2d2_cruise.md)
 * [路径点发布器](./ground/waypoint.md)
 * [自动驾驶代理](./ground/ad_agent.md)
 * [自动驾驶示例](./ground/ad_demo.md)
@@ -163,3 +166,4 @@ ___
 ___
 
 ## 参考文献
+
