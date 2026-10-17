@@ -68,6 +68,7 @@ ROS每章节运行代码:
 * [人形机器人基础](./humanoid/humanoid_basics.md)
 * [基于 ZMP 的步行轨迹规划](./humanoid/zmp_walk_planner.md)
 
+* [MuJoCo单足弹跳机器人简单仿真](./humanoid/mujoco_hopper_demo/index.md)
 
 ## 3. 肌肉骨骼人 <span id='musculoskeletal'></span>
 
@@ -83,6 +84,7 @@ ROS每章节运行代码:
 * [路径点发布器](./ground/waypoint.md)
 * [自动驾驶代理](./ground/ad_agent.md)
 * [自动驾驶示例](./ground/ad_demo.md)
+* [rostopic 手动驱动](./ground/rostopic_cruise.md)
 * [ROS Scenario Runner](./ground/ros_scenario_runner.md)
 * [RVIZ Carla 插件](./ground/rviz_plugin.md)
 * [扭转控制](./ground/twist_to_control.md)
@@ -152,6 +154,8 @@ ROS每章节运行代码:
 * [水下多传感器感知与 3D 轨迹跟踪控制](./water/rov_trajectory_tracking.md)
 
 * [水下声呐 SLAM 占据栅格建图与自主避障导航](./water/rov_sonar_slam_navigation.md)
+  
+* [新增水下三维地形测绘模块](./water/underwater_sonar_mapping.md)
 
 ___
 

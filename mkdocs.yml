@@ -79,6 +79,7 @@ nav:
 - 人形机器人:
     - 人形机器人基础: './humanoid/humanoid_basics.md'
     - 基于 ZMP 的步行轨迹规划: './humanoid/zmp_walk_planner.md'
+    - MuJoCo单足弹跳机器人简单仿真: './humanoid/mujoco_hopper_demo/index.md'
 - 肌肉骨骼人:
     - 肌肉骨骼人基础: './musculoskeletal/musculoskeletal_basics.md'
 - 地面载具:
@@ -90,6 +91,7 @@ nav:
     - 路径点发布器: './ground/waypoint.md'
     - 自动驾驶代理: './ground/ad_agent.md'
     - 自动驾驶示例: './ground/ad_demo.md'
+    - rostopic 手动驱动: './ground/rostopic_cruise.md'
     - ROS Scenario Runner: './ground/ros_scenario_runner.md'
     - RVIZ Carla 插件: './ground/rviz_plugin.md'
     - 交通标志识别 ROS 封装: './ground/carla_tsr_ros.md'
@@ -131,8 +133,7 @@ nav:
     - 水下机器人物理仿真与 6-DOF 键盘运动控制: './water/rov_physical_simulation.md'
     - 水下多传感器感知与 3D 轨迹跟踪控制: './water/rov_trajectory_tracking.md'
     - 水下声呐 SLAM 占据栅格建图与自主避障导航: './water/rov_sonar_slam_navigation.md'
-
-
+    - 新增水下三维地形测绘模块: './water/underwater_sonar_mapping.md'
 
 
 
