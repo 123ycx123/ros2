@@ -17,6 +17,8 @@ src/
 └── humanoid_zmp_walk_planner/
     ├── main.py                 # ZMP 步行轨迹规划与可视化节点
     ├── setup.py                # ROS 2 功能包配置文件
+    ├── package.xml             # ROS 2 依赖声明文件
+    ├── README.md               # 模块说明文档
     └── launch/
         └── main.launch.py      # 一键启动文件
 ```
