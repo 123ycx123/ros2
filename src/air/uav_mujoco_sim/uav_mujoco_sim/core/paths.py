@@ -32,11 +32,13 @@ def _candidates(subdir: str):
         yield os.path.join(get_package_share_directory(PKG_NAME), subdir)
     except Exception:
         pass
-    # 3) 兜底：向上一层层找（应对被拷贝到别处的场景）
+    # 3) 兜底：向上一层层找（应对被拷贝到别处的场景），同时试安装布局的
+    #    <prefix>/share/<包名>/——没 source ROS、ament 索引不可用时走这条
     d = PKG_DIR
     for _ in range(6):
         d = os.path.dirname(d)
         yield os.path.join(d, subdir)
+        yield os.path.join(d, "share", PKG_NAME, subdir)
 
 
 def find_dir(subdir: str, marker: Optional[str] = None) -> str:

@@ -99,9 +99,10 @@ def _launch_setup(context, *args, **kwargs):
     if lip("imu_noise").perform(context).lower() == "true":
         server_cmd.append("--imu-noise")
 
-    # 无显示环境改走 osmesa 无头
+    # 无显示环境改走 osmesa；headless 不建渲染器，不需要指定 GL 后端
     env = {}
-    if not (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")):
+    if lip("headless").perform(context).lower() != "true" and not (
+            os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")):
         env["MUJOCO_GL"] = os.environ.get("MUJOCO_GL", "osmesa")
 
     sim_server = ExecuteProcess(
