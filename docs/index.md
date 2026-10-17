@@ -66,9 +66,8 @@ ROS每章节运行代码:
 ## 2. 人形机器人 <span id='humanoid'></span>
 
 * [人形机器人基础](./humanoid/humanoid_basics.md)
-* [基于 ZMP 的步行轨迹规划](./humanoid/zmp_walk_planner.md)
-
 * [MuJoCo单足弹跳机器人简单仿真](./humanoid/mujoco_hopper_demo/index.md)
+* [基于 ZMP 的步行轨迹规划](./humanoid/zmp_walk_planner.md)
 
 ## 3. 肌肉骨骼人 <span id='musculoskeletal'></span>
 
