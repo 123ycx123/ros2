@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 import matplotlib.pyplot as plt
 import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
+
 
 class UnderwaterSonarMapping(Node):
     def __init__(self):
