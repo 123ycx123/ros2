@@ -26,28 +26,28 @@ src/
 
 1. 新建标准工作空间并进入 src 目录：
 
-```bash
+```
 mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws/src
 ```
 
 2. 从 ros2 仓库拷贝模块代码到工作空间：
 
-```bash
+```
 cp -r ~/OpenHUTB/ros2/src/humanoid_zmp_walk_planner ~/ros2_ws/src/
 cd ~/ros2_ws
 ```
 
 3. 编译工作空间并部署环境：
 
-```bash
+```
 colcon build --packages-select humanoid_zmp_walk_planner
 source install/setup.bash
 ```
 
 4. 运行 ZMP 步行轨迹规划节点：
 
-```bash
+```
 ros2 launch humanoid_zmp_walk_planner main.launch.py
 ```
 5.运行效果
