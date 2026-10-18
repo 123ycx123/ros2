@@ -15,12 +15,17 @@
 ```text
 src/
 └── humanoid_zmp_walk_planner/
-    ├── main.py                 # ZMP 步行轨迹规划与可视化节点
-    ├── setup.py                # ROS 2 功能包配置文件
-    ├── package.xml             # ROS 2 依赖声明文件
-    ├── README.md               # 模块说明文档
-    └── launch/
-        └── main.launch.py      # 一键启动文件
+    ├── humanoid_zmp_walk_planner/    # Python 源码目录
+    │   ├── __init__.py               # 空文件，标识包 
+    │   └── main.py                   # ZMP 步行轨迹规划与可视化节点
+    ├── resource/                     # 资源目录
+    │   └──  resource_index           # 无后缀空文件
+    ├── launch/
+    │   └── main.launch.py            # 一键启动文件
+    ├── package.xml                   # ROS 2 依赖声明文件
+    ├── setup.py                      # ROS 2 功能包配置文件
+    ├── setup.cfg                     # 脚本安装路径配置
+    └── README.md                     # 模块说明文档
 ```
 ## 运行步骤
 
