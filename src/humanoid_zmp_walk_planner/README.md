@@ -15,10 +15,10 @@
 src/
 └── humanoid_zmp_walk_planner/
     ├── humanoid_zmp_walk_planner/    # Python 源码目录
-    │   ├── __init__.py               # 空文件，标识包
+    │   ├── __init__.py               # 空文件，标识包 
     │   └── main.py                   # ZMP 步行轨迹规划与可视化节点
     ├── resource/                     # 资源目录
-    │   └── humanoid_zmp_walk_planner # 无后缀空文件
+    │   └──  resource_index           # 无后缀空文件
     ├── launch/
     │   └── main.launch.py            # 一键启动文件
     ├── package.xml                   # ROS 2 依赖声明文件
