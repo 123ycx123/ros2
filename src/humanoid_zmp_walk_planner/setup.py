@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'humanoid_zmp_walk_planner'
+package_name = 'drone_trajectory_logger'
 
 setup(
     name=package_name,
@@ -12,15 +12,14 @@ setup(
         ('share/' + package_name + '/launch', ['launch/main.launch.py']),
     ],
     install_requires=['setuptools'],
-    zip_safe=True,
-    maintainer='user',
-    maintainer_email='user@todo.todo',
-    description='Humanoid ZMP Walking Trajectory Planner',
-    license='TODO: License declaration',
-    tests_require=['pytest'],
+    maintainer='student',
+    maintainer_email='3523828193@qq.com',
+    description='Drone flight status recognition and trajectory plotting module',
+    license='MIT',
     entry_points={
         'console_scripts': [
-            'main = humanoid_zmp_walk_planner.humanoid_zmp_walk_planner:main',
+            'main = drone_trajectory_logger.main:main',
+            'analyzer = drone_trajectory_logger.trajectory_analyzer:main',
         ],
     },
 )
