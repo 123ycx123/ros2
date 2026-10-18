@@ -124,3 +124,37 @@ ros2 topic hz /chatter      # 应约为 10 Hz
 
 * `source` 命令只对当前终端生效，关闭终端后失效；
 * 本模块为教学实验代码，可在不改变话题名 `chatter` 的前提下替换消息内容。
+
+## 8. 测试
+
+### 8.1 代码风格、docstring 与集成测试
+
+```bash
+cd ~/ros2_ws
+source install/setup.bash
+colcon test --packages-select ros2_pubsub_py
+colcon test-result --verbose
+```
+
+`test/` 目录包含三项检查：
+
+| 测试 | 内容 |
+|---|---|
+| `test_flake8.py` | 代码风格（PEP 8） |
+| `test_pep257.py` | docstring 规范（第一行必须以英文句号 `.` 结尾） |
+| `test_pubsub_integration.py` | **最小集成测试**：同时运行 talker 与 listener，断言 listener 至少收到一条 `/chatter` 消息 |
+
+预期结果：全部通过且 `Summary ... 0 failures, 0 errors`。
+
+### 8.2 人工稳定性测试
+
+```bash
+# 终端 1：启动整个模块
+ros2 launch ros2_pubsub_py pubsub_demo.launch.py
+# 终端 2：观察话题频率
+ros2 topic hz /chatter
+# 终端 3：观察消息内容与序号
+ros2 topic echo /chatter
+```
+
+结果：连续运行 5 分钟以上，`/chatter` 频率稳定在约 10 Hz，listener 打印的序号与 talker 完全一致，无丢帧、无报错；`Ctrl+C` 退出后节点正常销毁。
