@@ -99,3 +99,18 @@ ros2 run ros2_pubsub_py listener
 | 提示混用了 noetic 与 humble | 同一终端加载了两套 ROS 环境 | 新开干净终端，只加载 Humble |
 | listener 收不到消息 | 话题名或 `ROS_DOMAIN_ID` 不一致 | 用 `ros2 topic list` / `ros2 topic echo` 确认两个节点都在 `/chatter` 上 |
 | 退出时出现 `Failed to publish log message to rosout: publisher's context is invalid` | 节点已销毁，rclpy 仍在向 `/rosout` 上报日志 | 属正常现象，可忽略 |
+
+## 6. 测试
+
+代码风格、docstring 与最小集成测试：
+
+```bash
+cd ~/ros2_ws
+source install/setup.bash
+colcon test --packages-select ros2_pubsub_py
+colcon test-result --verbose
+```
+
+其中 `test/test_pubsub_integration.py` 会同时运行 talker 与 listener，断言 listener 至少收到一条 `/chatter` 消息。
+
+人工稳定性测试：终端 1 执行 `ros2 launch ros2_pubsub_py pubsub_demo.launch.py`，终端 2 执行 `ros2 topic hz /chatter`，终端 3 执行 `ros2 topic echo /chatter`。连续运行 5 分钟以上，话题频率稳定在约 10 Hz，listener 序号与 talker 一致，无丢帧、无报错。
