@@ -231,7 +231,13 @@ class CarEnv:
                 "  - 虚拟机里打不开窗口时先试："
                 "MESA_GL_VERSION_OVERRIDE=3.3 python3 main.py --demo；\n"
                 "  - 仍失败可安装 sudo apt install -y libglfw3 libgl1".format(exc))
-        return self.mujoco.viewer.launch_passive(self.model, self.data)
+        viewer = self.mujoco.viewer.launch_passive(self.model, self.data)
+        # 车体 geoms 在 group=3，默认视窗不渲染该组；显式开启让车可见。
+        try:
+            viewer.opt.geomgroup[3] = 1
+        except AttributeError:
+            pass
+        return viewer
 
     # ------------------------------------------------------------------ 诊断
     def set_pitch_deg(self, degrees: float) -> None:

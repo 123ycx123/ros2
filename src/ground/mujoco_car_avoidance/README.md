@@ -92,6 +92,8 @@ bash main.sh                      # 等价于 --headless
 
 先跑 `--test`，再跑 `--headless`，最后录 `--demo` / `--interactive` 的效果图。
 
+> Windows 环境请确保仓库路径不含中文，否则 MuJoCo 加载模型会报 `ParseXML: Error opening file`。
+
 ## 参数
 
 | 参数 | 默认值 | 含义 |
