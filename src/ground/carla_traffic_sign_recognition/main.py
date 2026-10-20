@@ -52,6 +52,10 @@ def main():
     model_path = resolve_model_path(CONFIG['model_filename'])
     from ultralytics import YOLO
     model = YOLO(model_path)
+    # 预热：消除首帧推理延迟（避免阻塞相机回调）
+    dummy = np.zeros((CONFIG['camera_height'], CONFIG['camera_width'], 3), dtype=np.uint8)
+    model(dummy, verbose=False)
+    print("[INFO] 模型预热完成")
 
     print("[INFO] 连接 Carla: " + args.host + ":" + str(args.port))
     try:
@@ -148,9 +152,18 @@ def main():
             time.sleep(CONFIG['loop_sleep'])
 
     finally:
-        camera.stop()
-        camera.destroy()
-        vehicle.destroy()
+        try:
+            camera.stop()
+        except Exception:
+            pass
+        try:
+            camera.destroy()
+        except Exception:
+            pass
+        try:
+            vehicle.destroy()
+        except Exception:
+            pass
         cv2.destroyAllWindows()
         print("清理完成。")
 

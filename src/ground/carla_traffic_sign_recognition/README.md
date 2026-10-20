@@ -19,7 +19,7 @@
 - Carla/OpenHUTB 2.9.16
 - PyTorch 2.14.0 (CPU)、Torchvision 0.29.0 (CPU)
 - Ultralytics 8.4.160
-- OpenCV 5.0.0、NumPy 2.2.6
+- OpenCV 4.9.0.80、NumPy 1.26.4
 
 ## 前置条件
 
@@ -107,7 +107,7 @@ $$
 2. 生成自车，随机选 spawn 点
 3. 挂载 RGB 摄像头（640x360，FOV 90）
 4. 摄像头回调：图像转 numpy 数组
-5. 每 4 帧执行一次 YOLOv8 推理，仅检测类别 11
+5. 每 200ms（按时间限流）执行一次 YOLOv8 推理，仅检测类别 11
 6. 检测结果绘制到画面上，OpenCV 窗口显示
 7. 键盘输入映射为 carla.VehicleControl
 8. 主循环加 20ms 延时控制帧率，按 Q 退出时清理相机和车辆
