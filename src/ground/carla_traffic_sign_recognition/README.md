@@ -125,7 +125,7 @@ $$
         'camera_fov': 90,
         'model_filename': 'yolov8n.pt',
         'target_class': 11,
-        'infer_every_n_frames': 4,
+        'infer_interval': 0.2,
         'throttle_step': 0.06,
         'steer_step': 0.10,
         'key_hold_timeout': 0.18,
@@ -139,3 +139,20 @@ $$
 ## 相关模块
 
 - `carla_tsr_ros`：ROS Noetic 节点版，Linux 离线图像驱动
+
+## 性能评价与源码解析
+
+### 安装验证
+安装依赖后执行以下命令，确认 OpenCV 可用：
+
+    python -c "import cv2; print(cv2.__version__)"
+
+### 源码解析
+- **推理限流**：camera_callback 中使用 time.monotonic() 与 CONFIG['infer_interval']（200ms）比较，保证 YOLO 推理频率稳定在 5Hz。
+- **出生点容错**：world.try_spawn_actor() 配合 random.shuffle() 遍历所有出生点，避免被占用点导致崩溃。
+- **异常清理**：finally 中每个 destroy() 独立 try/except，确保某一步失败不影响后续资源释放。
+
+### 性能说明
+- 本模块为离线仿真演示，输入为本地静态图像，输出话题需外部节点订阅转换，不直接驱动 Carla 车辆。
+- 因此无法提供 mAP 等检测指标（缺少带标注的测试集）。
+- CPU 推理延迟参考：YOLOv8n 单帧约 50ms（5Hz 限流下稳定运行）。
