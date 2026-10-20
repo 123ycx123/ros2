@@ -25,7 +25,7 @@ def resolve_model_path(filename):
 
 current_frame = None
 latest_annotated_frame = None
-last_infer_time = 0.0
+last_infer_time = time.monotonic()
 model = None
 
 def camera_callback(image):
@@ -34,7 +34,7 @@ def camera_callback(image):
     array = np.reshape(array, (image.height, image.width, 4))
     frame = array[:, :, :3]
     
-    now = time.time()
+    now = time.monotonic()
     if now - last_infer_time > CONFIG['infer_interval']:
         last_infer_time = now
         results = model(frame, classes=[CONFIG['target_class']], verbose=False)
@@ -68,16 +68,29 @@ def main():
 
     bp_lib = world.get_blueprint_library()
     vehicle_bp = bp_lib.filter('vehicle.tesla.model3')[0]
-    spawn_point = random.choice(world.get_map().get_spawn_points())
-    vehicle = world.spawn_actor(vehicle_bp, spawn_point)
+    spawn_points = world.get_map().get_spawn_points()
+    random.shuffle(spawn_points)
+    vehicle = None
+    for spawn_point in spawn_points:
+        vehicle = world.try_spawn_actor(vehicle_bp, spawn_point)
+        if vehicle is not None:
+            break
+    if vehicle is None:
+        print("[ERROR] 无法生成车辆，所有出生点均被占用。")
+        sys.exit(1)
 
-    camera_bp = bp_lib.find('sensor.camera.rgb')
-    camera_bp.set_attribute('image_size_x', str(CONFIG['camera_width']))
-    camera_bp.set_attribute('image_size_y', str(CONFIG['camera_height']))
-    camera_bp.set_attribute('fov', str(CONFIG['camera_fov']))
-    camera_transform = carla.Transform(carla.Location(x=1.5, z=2.4))
-    camera = world.spawn_actor(camera_bp, camera_transform, attach_to=vehicle)
-    camera.listen(lambda image: camera_callback(image))
+    try:
+        camera_bp = bp_lib.find('sensor.camera.rgb')
+        camera_bp.set_attribute('image_size_x', str(CONFIG['camera_width']))
+        camera_bp.set_attribute('image_size_y', str(CONFIG['camera_height']))
+        camera_bp.set_attribute('fov', str(CONFIG['camera_fov']))
+        camera_transform = carla.Transform(carla.Location(x=1.5, z=2.4))
+        camera = world.spawn_actor(camera_bp, camera_transform, attach_to=vehicle)
+        camera.listen(lambda image: camera_callback(image))
+    except Exception as e:
+        print("[ERROR] 相机生成失败: " + str(e))
+        vehicle.destroy()
+        sys.exit(1)
 
     control = carla.VehicleControl()
     last_input_time = 0.0

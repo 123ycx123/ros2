@@ -4,8 +4,6 @@
 
 > 本模块与 `carla_tsr_ros` 互补：`carla_tsr_ros` 是 ROS 节点版（Linux 离线图像驱动），本模块是 Windows 端脚本版（实时连 Carla 相机、键盘控制）。
 
-![运行效果](../img/carla_traffic_sign_recognition_demo.gif)
-
 ## 功能
 
 - 在 Carla 仿真环境中生成自车并安装 RGB 摄像头
@@ -96,7 +94,7 @@ Carla Python API **无法通过 pip 直接下载**，需从本地 Carla 安装�
 YOLOv8 为单阶段目标检测网络，将目标检测转化为回归问题。损失函数：
 
 $$
-L = \\lambda_{box} \\cdot L_{CIoU} + \\lambda_{cls} \\cdot L_{BCE} + \\lambda_{dfl} \\cdot L_{DFL}
+L = \lambda_{box} \cdot L_{CIoU} + \lambda_{cls} \cdot L_{BCE} + \lambda_{dfl} \cdot L_{DFL}
 $$
 
 - $L_{CIoU}$：边界框回归损失（Complete IoU）
@@ -137,7 +135,6 @@ $$
 ## 已知限制
 
 - 本模块运行在 Windows 端（Carla 服务端与客户端同机），Ubuntu 端因 Carla 客户端版本不匹配无法直接连接
-- Linux 端 `main.sh` 仅作入口占位说明，不用于实际运行
 
 ## 相关模块
 

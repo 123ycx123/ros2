@@ -94,7 +94,7 @@ Carla Python API **无法通过 pip 直接下载**，需从本地 Carla 安装�
 YOLOv8 为单阶段目标检测网络，将目标检测转化为回归问题。损失函数：
 
 $$
-L = \\lambda_{box} \\cdot L_{CIoU} + \\lambda_{cls} \\cdot L_{BCE} + \\lambda_{dfl} \\cdot L_{DFL}
+L = \lambda_{box} \cdot L_{CIoU} + \lambda_{cls} \cdot L_{BCE} + \lambda_{dfl} \cdot L_{DFL}
 $$
 
 - $L_{CIoU}$：边界框回归损失（Complete IoU）
@@ -135,7 +135,6 @@ $$
 ## 已知限制
 
 - 本模块运行在 Windows 端（Carla 服务端与客户端同机），Ubuntu 端因 Carla 客户端版本不匹配无法直接连接
-- Linux 端 `main.sh` 仅作入口占位说明，不用于实际运行
 
 ## 相关模块
 
