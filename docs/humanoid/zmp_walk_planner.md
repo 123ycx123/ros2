@@ -56,7 +56,7 @@ source install/setup.bash
 ros2 launch humanoid_zmp_walk_planner main.launch.py
 ```
 5.运行效果
-节点成功启动，实时计算并绘制出人形机器人的足部运动轨迹，图形界面成功展示了机器人的行走姿态，验证了 ZMP 步行规划算法的正确性。
+节点成功启动，实时计算并绘制出人形机器人的足部运动轨迹，图形界面成功展示了机器人的行走姿态，实现了简化步态动画的演示。
 
 ![运行效果](../img/capture_3.png)
 
