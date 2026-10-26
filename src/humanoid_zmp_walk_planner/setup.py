@@ -7,7 +7,7 @@ setup(
     version='0.0.0',
     packages=[package_name],
     data_files=[
-        ('share/ament_index/resource_index/packages', ['resource/resource_index']),
+        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name + '/launch', ['launch/main.launch.py']),
     ],
@@ -18,7 +18,7 @@ setup(
     license='MIT',
     entry_points={
         'console_scripts': [
-            'main = humanoid_zmp_walk_planner.main:main',
+            'humanoid_zmp_walk_planner = humanoid_zmp_walk_planner.main:main',
         ],
     },
 )
