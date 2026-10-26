@@ -12,10 +12,12 @@ setup(
         ('share/' + package_name + '/launch', ['launch/main.launch.py']),
     ],
     install_requires=['setuptools'],
+    zip_safe=True,
     maintainer='student',
     maintainer_email='2320842128@qq.com',
     description='Humanoid ZMP walking trajectory planner',
     license='MIT',
+    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'humanoid_zmp_walk_planner = humanoid_zmp_walk_planner.main:main',
