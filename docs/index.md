@@ -101,6 +101,10 @@ ROS 2 话题发布订阅基础实验（talker/listener）：[chap2/ros2_pubsub_p
 
 * [YOLOv8 视觉感知目标跟随仿真](./ground/yolov8_target_tracking.md)
 * [车辆键盘遥操作与二维模拟](./ground/vehicle_pygame_teleop.md)
+
+* [TurtleBot3 激光雷达自主避障（ROS 2）](./ground/turtlebot3_lidar_avoid.md) —— 订阅机载激光雷达，按扇区提取前/左/右最近距离，经三态状态机与势场法决策后发布 /cmd_vel，实现迷宫场景自主避障
+
+
 * [MuJoCo 差速小车轮滑感知与轨迹补偿](./ground/mujoco_diff_drive_slip_compensation.md)
 * [MuJoCo 地面小车射线感知与分级减速避障](./ground/mujoco_car_avoidance.md)
 * [2D 小车目标追踪仿真](./ground/car_2d_target_tracker.md)
@@ -108,6 +112,7 @@ ROS 2 话题发布订阅基础实验（talker/listener）：[chap2/ros2_pubsub_p
 * [恶劣雨雾天气下多传感器感知性能对比实验](./ground/weather_perception_benchmark.md)
 * [TurtleBot3 仿真自主导航与避障参数优化](./ground/turtlebot3_auto_nav/README.md)
 * [图像录制 ROS 2 封装模块](./ground/image_recorder.md)
+
 
 ## 5. 空域载具 <span id='air_vehicle'></span>
 * [无人机着陆阶段识别与接地载荷预测](./air/landing_assessment.md)
