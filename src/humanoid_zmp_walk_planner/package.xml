@@ -2,7 +2,7 @@
 <package format="3">
   <name>humanoid_zmp_walk_planner</name>
   <version>0.0.0</version>
-  <description>Humanoid ZMP walking trajectory planner</description>
+  <description>Simplified Biped Walking Animation</description>
   <maintainer email="2320842128@qq.com">student</maintainer>
   <license>MIT</license>
 
