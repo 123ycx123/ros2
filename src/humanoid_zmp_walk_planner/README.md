@@ -1,4 +1,4 @@
-# 人形机器人 - 基于 ZMP 的步行轨迹规划 ROS 2 封装模块
+# 人形机器人 - 简化双足步态动画演示 ROS 2 封装模块
 
 ## 作业概述与背景
 本模块实现简化双足步态演示，在 ROS 2 环境下实现了一个步行轨迹规划可视化节点。节点模拟了人形机器人一个完整步态周期（支撑期与摆动期）的腿部轨迹，并实时绘制出机器人的运动姿态，完成双足行走动画仿真。
@@ -51,15 +51,10 @@ colcon build --packages-select humanoid_zmp_walk_planner
 source install/setup.bash
 ```
 
-4. 运行 ZMP 步行轨迹规划节点：
+4. 简化双足步态动画演示与可视化节点：
 
 ```
 ros2 launch humanoid_zmp_walk_planner main.launch.py
 ```
 
-5. 运行效果：
-
-节点成功启动，实时计算并绘制出人形机器人的足部运动轨迹，图形界面成功展示了机器人的行走姿态，实现了简化步态动画的演示。
-
-![运行效果](../img/capture_3.png)
 > 📖 **详细原理与实验步骤请参阅：** [点击查看主文档](../../docs/humanoid/zmp_walk_planner.md)
