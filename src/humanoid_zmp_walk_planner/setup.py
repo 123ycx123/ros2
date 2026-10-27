@@ -15,7 +15,7 @@ setup(
     zip_safe=True,
     maintainer='student',
     maintainer_email='2320842128@qq.com',
-    description='Humanoid ZMP walking trajectory planner',
+    description='Simplified bipedal gait animation demo for humanoid robot',
     license='MIT',
     tests_require=['pytest'],
     entry_points={
