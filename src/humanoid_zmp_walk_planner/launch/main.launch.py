@@ -5,7 +5,7 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='humanoid_zmp_walk_planner',
-            executable='main',
+            executable='humanoid_zmp_walk_planner',
             name='humanoid_zmp_walk_planner_node',
             output='screen'
         )
