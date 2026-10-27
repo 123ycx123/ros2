@@ -1,11 +1,12 @@
 # 人形机器人 - 基于 ZMP 的步行轨迹规划 ROS 2 封装模块
 
-本模块基于简化的人形机器人 ZMP（零力矩点）运动学模型，在 ROS 2 环境下实现了一个步行轨迹规划与可视化节点。节点模拟了人形机器人一个完整步态周期（支撑期与摆动期）的足部轨迹，并实时绘制出机器人的运动姿态，验证了双足行走的步态规划逻辑。
+## 作业概述与背景
+本模块实现简化双足步态演示，在 ROS 2 环境下实现了一个步行轨迹规划可视化节点。节点模拟了人形机器人一个完整步态周期（支撑期与摆动期）的腿部轨迹，并实时绘制出机器人的运动姿态，完成双足行走动画仿真。
 
 ## 运行环境
 * 操作系统：Ubuntu 22.04（虚拟机）
 * ROS 2 版本：Humble
-* 依赖库：rclpy, geometry_msgs, matplotlib, numpy
+* 依赖库：rclpy, matplotlib
 
 ## 核心代码文件清单
 
@@ -14,18 +15,19 @@
 ```text
 src/
 └── humanoid_zmp_walk_planner/
-    ├── humanoid_zmp_walk_planner/    # Python 源码目录
-    │   ├── __init__.py               # 空文件，标识包 
-    │   └── main.py                   # ZMP 步行轨迹规划与可视化节点
-    ├── resource/                     # 资源目录
-    │   └── humanoid_zmp_walk_planner           # 无后缀空文件
+    ├── humanoid_zmp_walk_planner/        # Python 源码目录
+    │   ├── __init__.py                   # 空文件，标识包 
+    │   └── main.py                       # ZMP 步行轨迹规划与可视化节点
+    ├── resource/                         # 资源目录
+    │   └── humanoid_zmp_walk_planner     # 无后缀空文件
     ├── launch/
-    │   └── main.launch.py            # 一键启动文件
-    ├── package.xml                   # ROS 2 依赖声明文件
-    ├── setup.py                      # ROS 2 功能包配置文件
-    ├── setup.cfg                     # 脚本安装路径配置
-    └── README.md                     # 模块说明文档
+    │   └── main.launch.py                # 一键启动文件
+    ├── package.xml                       # ROS 2 依赖声明文件
+    ├── setup.py                          # ROS 2 功能包配置文件
+    ├── setup.cfg                         # 脚本安装路径配置
+    └── README.md                         # 模块说明文档
 ```
+
 ## 运行步骤
 
 1. 新建标准工作空间并进入 src 目录：
@@ -55,5 +57,9 @@ source install/setup.bash
 ros2 launch humanoid_zmp_walk_planner main.launch.py
 ```
 
+5. 运行效果：
 
+节点成功启动，实时计算并绘制出人形机器人的足部运动轨迹，图形界面成功展示了机器人的行走姿态，实现了简化步态动画的演示。
+
+![运行效果](../img/capture_3.png)
 > 📖 **详细原理与实验步骤请参阅：** [点击查看主文档](../../docs/humanoid/zmp_walk_planner.md)
