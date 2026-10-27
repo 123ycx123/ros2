@@ -27,6 +27,7 @@ src/
     ├── setup.cfg                         # 脚本安装路径配置
     └── README.md                         # 模块说明文档
 ```
+
 ## 运行步骤
 
 1. 新建标准工作空间并进入 src 目录：
@@ -55,7 +56,8 @@ source install/setup.bash
 ```
 ros2 launch humanoid_zmp_walk_planner main.launch.py
 ```
-5.运行效果
+
+5. 运行效果：
 
 节点成功启动，实时计算并绘制出人形机器人的足部运动轨迹，图形界面成功展示了机器人的行走姿态，实现了简化步态动画的演示。
 
