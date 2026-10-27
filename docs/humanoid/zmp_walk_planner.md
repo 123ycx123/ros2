@@ -6,7 +6,7 @@
 ## 运行环境
 * 操作系统：Ubuntu 22.04（虚拟机）
 * ROS 2 版本：Humble
-* 依赖库：rclpy, geometry_msgs, matplotlib, numpy
+* 依赖库：rclpy, matplotlib
 
 ## 核心代码文件清单
 
