@@ -17,7 +17,7 @@ src/
 └── humanoid_zmp_walk_planner/
     ├── humanoid_zmp_walk_planner/        # Python 源码目录
     │   ├── __init__.py                   # 空文件，标识包 
-    │   └── main.py                       # ZMP 步行轨迹规划与可视化节点
+    │   └── main.py                       # 简化双足步态动画可视化节点
     ├── resource/                         # 资源目录
     │   └── humanoid_zmp_walk_planner     # 无后缀空文件
     ├── launch/
@@ -51,7 +51,7 @@ colcon build --packages-select humanoid_zmp_walk_planner
 source install/setup.bash
 ```
 
-4. 简化双足步态动画演示与可视化节点：
+4. 启动简化双足步态动画演示与可视化节点：
 
 ```
 ros2 launch humanoid_zmp_walk_planner main.launch.py
